@@ -35,7 +35,7 @@ suite("Extension", () => {
       await vscode.commands.executeCommand("webview.open", { name: "Local", url });
       // Wait for the page to load so the tab has a URL to match against.
       await waitFor(() =>
-        vscode.window.tabGroups.all.some((g) => g.tabs.some((t) => t.label === "hello"))
+        vscode.window.tabGroups.all.some((g) => g.tabs.some((t) => t.label === "hello")),
       );
       assert.strictEqual(tabCount(), 1);
       await vscode.commands.executeCommand("webview.open", { name: "Local", url: url + "other" });
@@ -60,7 +60,7 @@ suite("Extension", () => {
       await new Promise((r) => setTimeout(r, 300));
       await vscode.commands.executeCommand("workbench.action.acceptSelectedQuickOpenItem");
       await waitFor(() =>
-        vscode.window.tabGroups.all.some((g) => g.tabs.some((t) => t.label === "typed"))
+        vscode.window.tabGroups.all.some((g) => g.tabs.some((t) => t.label === "typed")),
       );
     } finally {
       await vscode.commands.executeCommand("workbench.action.closeAllEditors");
