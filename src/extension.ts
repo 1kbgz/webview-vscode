@@ -43,7 +43,7 @@ class SitesProvider implements vscode.TreeDataProvider<Site> {
 async function pickSite(placeHolder: string): Promise<Site | undefined> {
   const picked = await vscode.window.showQuickPick(
     getSites().map((site) => ({ label: site.name, description: site.url, site })),
-    { placeHolder }
+    { placeHolder },
   );
   return picked?.site;
 }
@@ -63,7 +63,15 @@ function pickSiteOrUrl(): Promise<Site | undefined> {
   quickPick.onDidChangeValue((value) => {
     const url = value.trim();
     quickPick.items = /^https?:\/\/\S+$/.test(url)
-      ? [{ label: url, description: "Open URL", alwaysShow: true, site: { name: new URL(url).host, url } }, ...siteItems]
+      ? [
+          {
+            label: url,
+            description: "Open URL",
+            alwaysShow: true,
+            site: { name: new URL(url).host, url },
+          },
+          ...siteItems,
+        ]
       : siteItems;
   });
   return new Promise((resolve) => {
@@ -108,7 +116,8 @@ export function activate(context: vscode.ExtensionContext): void {
       const url = await vscode.window.showInputBox({
         prompt: "Site URL",
         placeHolder: "https://example.com",
-        validateInput: (value) => (/^https?:\/\/\S+$/.test(value) ? undefined : "Enter an http(s) URL"),
+        validateInput: (value) =>
+          /^https?:\/\/\S+$/.test(value) ? undefined : "Enter an http(s) URL",
       });
       if (!url) return;
       const name = await vscode.window.showInputBox({
@@ -123,7 +132,7 @@ export function activate(context: vscode.ExtensionContext): void {
       if (!site) return;
       const removed = site;
       await saveSites(getSites().filter((s) => s.name !== removed.name || s.url !== removed.url));
-    })
+    }),
   );
 }
 
