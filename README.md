@@ -8,7 +8,7 @@ Keep a list of web apps and open them in VS Code's integrated browser. This is u
 
 Sites are listed in the **Webview Sites** view in the Explorer. Click a site to open it. Use the `+` button to add a site and the trash icon to remove one. The same actions are available from the Command Palette:
 
-- `Webview: Open Site`
+- `Webview: Open Site` (pick a saved site, or paste a URL to open it directly)
 - `Webview: Add Site`
 - `Webview: Remove Site`
 

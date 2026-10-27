@@ -46,4 +46,25 @@ suite("Extension", () => {
       server.close();
     }
   });
+
+  test("opens a URL pasted into the picker", async () => {
+    const server = http.createServer((_req, res) => res.end("<title>typed</title>"));
+    await new Promise<void>((r) => server.listen(0, "127.0.0.1", r));
+    const url = `http://127.0.0.1:${(server.address() as AddressInfo).port}/`;
+    try {
+      await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+      void vscode.commands.executeCommand("webview.open");
+      await new Promise((r) => setTimeout(r, 500));
+      await vscode.env.clipboard.writeText(url);
+      await vscode.commands.executeCommand("editor.action.clipboardPasteAction");
+      await new Promise((r) => setTimeout(r, 300));
+      await vscode.commands.executeCommand("workbench.action.acceptSelectedQuickOpenItem");
+      await waitFor(() =>
+        vscode.window.tabGroups.all.some((g) => g.tabs.some((t) => t.label === "typed"))
+      );
+    } finally {
+      await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+      server.close();
+    }
+  });
 });

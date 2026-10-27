@@ -48,6 +48,37 @@ async function pickSite(placeHolder: string): Promise<Site | undefined> {
   return picked?.site;
 }
 
+type SiteItem = vscode.QuickPickItem & { site: Site };
+
+/** Like pickSite, but a typed or pasted http(s) URL can be opened directly. */
+function pickSiteOrUrl(): Promise<Site | undefined> {
+  const siteItems: SiteItem[] = getSites().map((site) => ({
+    label: site.name,
+    description: site.url,
+    site,
+  }));
+  const quickPick = vscode.window.createQuickPick<SiteItem>();
+  quickPick.placeholder = "Site to open, or paste a URL";
+  quickPick.items = siteItems;
+  quickPick.onDidChangeValue((value) => {
+    const url = value.trim();
+    quickPick.items = /^https?:\/\/\S+$/.test(url)
+      ? [{ label: url, description: "Open URL", alwaysShow: true, site: { name: new URL(url).host, url } }, ...siteItems]
+      : siteItems;
+  });
+  return new Promise((resolve) => {
+    quickPick.onDidAccept(() => {
+      resolve(quickPick.selectedItems[0]?.site);
+      quickPick.hide();
+    });
+    quickPick.onDidHide(() => {
+      resolve(undefined);
+      quickPick.dispose();
+    });
+    quickPick.show();
+  });
+}
+
 async function openSite(site: Site): Promise<void> {
   const commands = await vscode.commands.getCommands(true);
   if (!commands.includes(BROWSER_OPEN)) {
@@ -70,7 +101,7 @@ export function activate(context: vscode.ExtensionContext): void {
       if (e.affectsConfiguration("webview.sites")) provider.refresh();
     }),
     vscode.commands.registerCommand("webview.open", async (site?: Site) => {
-      site ??= await pickSite("Site to open");
+      site ??= await pickSiteOrUrl();
       if (site) await openSite(site);
     }),
     vscode.commands.registerCommand("webview.addSite", async () => {
