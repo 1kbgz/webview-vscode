@@ -1,0 +1,125 @@
+{
+  "name": "webview",
+  "displayName": "Webview",
+  "description": "Open configured web apps in VS Code's integrated browser.",
+  "version": "0.1.0",
+  "publisher": "1kbgz",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/1kbgz/webview-vscode"
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "webview",
+    "browser",
+    "web app",
+    "sandstorm"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Webview",
+      "properties": {
+        "webview.sites": {
+          "type": "array",
+          "default": [],
+          "description": "Web apps that can be opened in a VS Code tab.",
+          "items": {
+            "type": "object",
+            "required": [
+              "name",
+              "url"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Tab and list label."
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "description": "URL to open."
+              }
+            }
+          }
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "webview.open",
+        "title": "Open Site",
+        "category": "Webview"
+      },
+      {
+        "command": "webview.addSite",
+        "title": "Add Site",
+        "category": "Webview",
+        "icon": "$(add)"
+      },
+      {
+        "command": "webview.removeSite",
+        "title": "Remove Site",
+        "category": "Webview",
+        "icon": "$(trash)"
+      }
+    ],
+    "views": {
+      "explorer": [
+        {
+          "id": "webview.sites",
+          "name": "Webview Sites"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "webview.addSite",
+          "when": "view == webview.sites",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "webview.removeSite",
+          "when": "view == webview.sites",
+          "group": "inline"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run esbuild-base -- --production",
+    "esbuild-base": "node esbuild.js",
+    "esbuild": "node esbuild.js",
+    "esbuild-watch": "node esbuild.js --watch",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "pretest": "npm run compile",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.75.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.27.3",
+    "eslint": "^8.56.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "typescript": "^5.3.3"
+  }
+}
