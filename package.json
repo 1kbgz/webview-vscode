@@ -1,5 +1,5 @@
 {
-  "name": "webview",
+  "name": "webview-vscode",
   "displayName": "Webview",
   "description": "Open configured web apps in VS Code's integrated browser.",
   "version": "0.1.0",
