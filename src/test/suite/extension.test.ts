@@ -17,7 +17,7 @@ async function waitFor(check: () => boolean, timeout = 5000): Promise<void> {
 
 suite("Extension", () => {
   test("activates and registers commands", async () => {
-    const ext = vscode.extensions.getExtension("1kbgz.webview");
+    const ext = vscode.extensions.getExtension("timkpaine.webview");
     assert.ok(ext);
     await ext.activate();
     const commands = await vscode.commands.getCommands(true);

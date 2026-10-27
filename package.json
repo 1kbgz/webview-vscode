@@ -3,7 +3,7 @@
   "displayName": "Webview",
   "description": "Open configured web apps in VS Code's integrated browser.",
   "version": "0.1.0",
-  "publisher": "1kbgz",
+  "publisher": "timkpaine",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
